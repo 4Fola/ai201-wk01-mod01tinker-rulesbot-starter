@@ -1,4 +1,4 @@
-# 🎲 RulesBot
+# 👉 🎲 RulesBot | [Read Me](README.md) | [AI Bill of Materials (AI-BOM)](AI_Bill_of_Materials.md) | [Model Card](model_card.md) |
 
 > A board game rules assistant — because "just read the rulebook" isn't always helpful at 11pm on game night.
 
