@@ -55,7 +55,7 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 *Sketch out what one item in your return list looks like as a concrete example. Where does each field come from in the query results?*
 
 ```
-[your answer here]
+The retrieval function will return a list of dictionaries, where each dictionary contains the chunk text, the game name (from metadata), and the distance score.
 ```
 
 ---
@@ -65,7 +65,7 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 *`_collection.query()` returns nested lists. Describe what index you need to access to get the actual list of results for a single query, and why the nesting exists.*
 
 ```
-[your answer here]
+ChromaDB returns a nested list because it supports batch querying. Since we only pass one query string, we must access index [0] (e.g., results["documents"][0]) to get the actual lists of documents, metadata, and distances.
 ```
 
 ---
@@ -75,7 +75,7 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 *Will you filter out results above a certain distance score, or return all `n_results` regardless of how relevant they are? What are the tradeoffs of each approach?*
 
 ```
-[your answer here]
+We will retrieve the top 3 results (top_k=3). A distance score around 0.1–0.2 indicates high relevance, while 0.7–0.9 means the context is loosely related.
 ```
 
 ---
