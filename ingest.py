@@ -24,11 +24,6 @@ def chunk_document(text, game_name):
     """
     Split a rule document into chunks ready for embedding.
 
-    This function is already implemented — read through it and the inline
-    comments before moving on. The decisions made here directly shape what
-    retrieval returns in Milestones 2 and 3, so it's worth understanding
-    before you build on top of it.
-
     Strategy: character-based sliding window with overlap.
       - chunk_size = 300 characters: long enough to carry the semantic
         meaning of a single rule, short enough to return targeted results
@@ -42,15 +37,16 @@ def chunk_document(text, game_name):
       - "game"     : the game name, e.g. "Catan" (str)
       - "chunk_id" : a unique identifier, e.g. "catan_0", "catan_1" (str)
     """
+
     chunk_size = 300
-    overlap = 50
+    chunk_overlap = 50
     min_length = 50
+    prefix = game_name.lower().replace(" ", "_")
 
     chunks = []
-    prefix = game_name.lower().replace(" ", "_")
     counter = 0
-
     start = 0
+
     while start < len(text):
         end = start + chunk_size
         chunk_text = text[start:end].strip()
@@ -63,8 +59,6 @@ def chunk_document(text, game_name):
             })
             counter += 1
 
-        # Advance by (chunk_size - overlap) so the next chunk shares
-        # `overlap` characters with the tail of this one.
-        start += chunk_size - overlap
+        start += chunk_size - chunk_overlap
 
     return chunks

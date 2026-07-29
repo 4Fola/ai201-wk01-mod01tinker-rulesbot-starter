@@ -111,12 +111,13 @@ handle these cases better, at the cost of more implementation complexity.
 
 ## Implementation Notes
 
-*Fill this in after running the app and confirming ingestion worked.*
+*Chunk Size: 300 characters. (Rulebooks are semantically dense; smaller chunks preserve specific rules).*
 
 **Actual chunk count produced across all 8 rule books:**
+Chunk Overlap: 50 characters. (Prevents rule context from being lost across boundary splits).
 
 ```
-[your answer here]
+Fọ́là
 ```
 
 **One thing that surprised you or didn't match your expectations:**
