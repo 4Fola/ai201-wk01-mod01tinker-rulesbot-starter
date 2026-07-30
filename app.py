@@ -137,5 +137,6 @@ if __name__ == "__main__":
     print("\n" + "="*50)
     print("  RulesBot — starting up")
     print("="*50 + "\n")
-    run_ingestion()
+    print("Note: ingestion no longer runs automatically on startup.")
+    print("To ingest rulebooks run: python ingest_run.py")
     demo.launch()

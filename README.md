@@ -8,6 +8,9 @@ RulesBot answers natural language questions about board game rules using a RAG (
 
 **This is a starter repo.** The UI and infrastructure are built. The retrieval and generation pipeline is yours to implement.
 
+## Walkthrough Demo
+<img src="RulesBot-Demo.gif" alt="RulesBot-Demo">
+
 ---
 
 ## Getting Started
@@ -92,6 +95,10 @@ rm -rf chroma_db/   # Mac/Linux
 # On Windows: Also use cmd /c rmdir /s /q chroma_db or 
 # Powershell: Remove-Item -Recurse -Force .\chroma_db
 python app.py
+
+# To improve start-up time, Use python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+# This will pre-download the model
+# You can also load the ingestion manually instead. 
 ```
 
 ---

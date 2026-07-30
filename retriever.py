@@ -2,23 +2,37 @@ import chromadb
 from chromadb.utils import embedding_functions
 from config import CHROMA_COLLECTION, CHROMA_PATH, EMBEDDING_MODEL, N_RESULTS
 
-# Embedding function and ChromaDB client are initialized once at module load.
-# sentence-transformers downloads the model on first use — this may take
-# 30–60 seconds the very first time. Subsequent runs use a local cache.
-_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
-    model_name=EMBEDDING_MODEL
-)
-_client = chromadb.PersistentClient(path=CHROMA_PATH)
-_collection = _client.get_or_create_collection(
-    name=CHROMA_COLLECTION,
-    embedding_function=_ef,
-    metadata={"hnsw:space": "cosine"},
-)
+# Lazy-initialized globals — keep imports cheap at module load.
+_ef = None
+_client = None
+_collection = None
+
+
+def _init_collection():
+    """Initialize the embedding function, client, and collection on first use."""
+    global _ef, _client, _collection
+    if _collection is not None:
+        return _collection
+
+    # Initialize embedding function (may download model on first use)
+    _ef = embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=EMBEDDING_MODEL
+    )
+
+    # Initialize client and collection
+    _client = chromadb.PersistentClient(path=CHROMA_PATH)
+    _collection = _client.get_or_create_collection(
+        name=CHROMA_COLLECTION,
+        embedding_function=_ef,
+        metadata={"hnsw:space": "cosine"},
+    )
+
+    return _collection
 
 
 def get_collection():
-    """Return the ChromaDB collection. Used by app.py during ingestion."""
-    return _collection
+    """Return the ChromaDB collection, initializing it lazily on first use."""
+    return _init_collection()
 
 
 def embed_and_store(chunks):
@@ -38,12 +52,13 @@ def embed_and_store(chunks):
     You don't generate embeddings manually here — you hand over the text
     and ChromaDB handles the vector math.
     """
-    _collection.add(
+    collection = get_collection()
+    collection.add(
         documents=[c["text"] for c in chunks],
         metadatas=[{"game": c["game"]} for c in chunks],
         ids=[c["chunk_id"] for c in chunks],
     )
-    print(f"Stored {_collection.count()} total chunks in the vector database.")
+    print(f"Stored {collection.count()} total chunks in the vector database.")
 
 
 def retrieve(query: str, top_k: int = N_RESULTS) -> list[dict]:
@@ -61,10 +76,12 @@ def retrieve(query: str, top_k: int = N_RESULTS) -> list[dict]:
       - "game"     : the game name (pulled from metadata)
       - "distance" : the similarity score (lower = more similar for cosine)
     """
-    if _collection.count() == 0:
+    collection = get_collection()
+
+    if collection.count() == 0:
         return []
 
-    results = _collection.query(
+    results = collection.query(
         query_texts=[query],
         n_results=top_k,
         include=["documents", "metadatas", "distances"],
