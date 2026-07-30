@@ -41,8 +41,9 @@ Returns a fallback string (not an error) when `retrieved_chunks` is empty.
 
 *How will you format the retrieved chunks before passing them to the LLM? Describe the structure — not the code. Consider: will you label chunks by game? Include distance scores? Separate chunks with delimiters?*
 
+
 ```
-[your answer here]
+Each retrieved chunk will be formatted with its explicit source (e.g., Source: [Game Name]\nRule: [Chunk Text]) to help the LLM properly cite the rules in its final answer
 ```
 
 ---
@@ -53,6 +54,7 @@ Returns a fallback string (not an error) when `retrieved_chunks` is empty.
 
 ```
 [your answer here]
+"Answer using only the rule text provided below. If the answer is not contained in the provided text, say so explicitly — do not draw on outside knowledge or fill in gaps from what you know about board games."
 ```
 
 ---
@@ -104,7 +106,7 @@ Returns a fallback string (not an error) when `retrieved_chunks` is empty.
 **Test query and response:**
 
 ```
-Query: [your test query]
+Query: How do you get out of Jail in Monopoly?
 Response: [abbreviated response]
 Correctly grounded? [yes / no]
 Cited the right game? [yes / no]

@@ -126,7 +126,7 @@ with gr.Blocks(
                     </ul>
                     <hr style="border:none; border-top:1px solid #ddd6fe; margin:0.75rem 0;">
                     <p style="font-size:0.75rem; color:#7c3aed; margin:0; line-height:1.5;">
-                        Answers are grounded in the loaded rules only. If a rule
+                        NB: Answers are grounded in the loaded rules only. If a rule
                         isn't in the books, RulesBot will say so.
                     </p>
                 </div>

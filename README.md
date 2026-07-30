@@ -89,6 +89,8 @@ ChromaDB persists to disk in `./chroma_db`. If you change your chunking strategy
 ```bash
 rm -rf chroma_db/   # Mac/Linux
 # or: rmdir /s chroma_db   # Windows
+# On Windows: Also use cmd /c rmdir /s /q chroma_db or 
+# Powershell: Remove-Item -Recurse -Force .\chroma_db
 python app.py
 ```
 

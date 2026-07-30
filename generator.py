@@ -23,6 +23,12 @@ def _format_context(retrieved_chunks):
 
 def _fallback_response(query, retrieved_chunks):
     """Create a useful grounded answer even when the LLM is unavailable."""
+    if not retrieved_chunks:
+        return (
+            "I couldn't find anything relevant in the loaded rule books. "
+            "Try rephrasing your question — or check that your ingestion pipeline is working."
+        )
+
     top_chunk = retrieved_chunks[0]
     game = top_chunk.get("game", "Unknown")
     excerpt = " ".join(str(top_chunk.get("text", "")).split())
@@ -35,52 +41,59 @@ def _fallback_response(query, retrieved_chunks):
     )
 
 
-def generate_response(query, retrieved_chunks):
-    """
-    Generate a grounded answer from retrieved rule chunks.
+def generate_response(query: str, retrieved_chunks: list[dict]) -> str:
+    """Generate a grounded answer from retrieved rule chunks.
 
-    The response is built from the retrieved excerpts only. If the LLM is not
-    available, the function falls back to a concise summary of the best match.
+    Uses the Groq client when an API key is present; otherwise falls back
+    to a minimal grounded summary.
+
+    Milestone 3: Generate a Grounded Response
+    - Addressed: Grounding failures and hallucinations.
+    - Logic: Applies a strict system prompt to prohibit outside knowledge and 
+      formats context explicitly with source metadata.
     """
+
     if not retrieved_chunks:
-        return (
-            "I couldn't find anything relevant in the loaded rule books. "
-            "Try rephrasing your question — or check that your ingestion pipeline is working."
-        )
+        return _fallback_response(query, retrieved_chunks)
 
+    # 1. Format the retrieved context cleanly for the LLM
     context = _format_context(retrieved_chunks)
+    for chunk in retrieved_chunks:
+        context += f"\nSource: {chunk['game']}\nRule: {chunk['text']}\n"
 
     if _client is None:
         return _fallback_response(query, retrieved_chunks)
 
+    # 2. Define the strong grounding instruction (System Prompt)
+    system_prompt = (
+        "Answer using only the supplied rule excerpts. "
+        "Do not use outside board-game knowledge. "
+        "Mention which game the answer comes from. "
+        "If the excerpts do not contain enough information, say so clearly."
+        "do not draw on outside knowledge or fill in gaps from what you know about board games."
+    )
+
+    # 3. Combine the context and the user's query
+    user_prompt = f"Question: {query}\n\nRule excerpts:\n{context}\n\nProvide a concise answer grounded in these excerpts."
+
+    # 4. Generate the response via the LLM API
+    # Assuming _client and config are imported at the top of the file per the starter repo
     try:
         completion = _client.chat.completions.create(
-            model=LLM_MODEL,
-            temperature=0.2,
+            model=LLM_MODEL, # Uses the model defined in config.py            
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "Answer using only the supplied rule excerpts. "
-                        "Do not use outside board-game knowledge. "
-                        "Mention which game the answer comes from. "
-                        "If the excerpts do not contain enough information, say so clearly."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": (
-                        f"Question: {query}\n\n"
-                        f"Rule excerpts:\n{context}\n\n"
-                        "Provide a concise answer grounded in these excerpts."
-                    ),
-                },
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
             ],
+            temperature=0.0, # Using a low temperature enforces deterministic, grounded answers
         )
+
+        # Groq responses mirror common chat-completion shapes
         answer = completion.choices[0].message.content
         if answer and answer.strip():
             return answer.strip()
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"LLM completion failed: {e}")
 
+    # Return the generated text string
     return _fallback_response(query, retrieved_chunks)
