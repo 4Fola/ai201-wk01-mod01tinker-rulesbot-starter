@@ -99,6 +99,28 @@ Each retrieved chunk will be formatted with its explicit source (e.g., Source: [
 
 ---
 
+### Questions:
+
+*You ask "can I trade resources with the bank?" and retrieval returns a Catan rule, but the bot describes Monopoly property trading. What most likely caused this?*
+
+```
+The system prompt's grounding instruction was too weak. By using a prompt like "use the provided context" rather than "answer only from the provided text," the model was left with room to draw on its training data when it thought it had a better answer.
+```
+
+*What is the primary purpose of including source citations in a RAG response?*
+
+```
+Citations allow users to verify the answer against the original document, making grounding failures detectable. A user who checks the cited source can tell whether the model answered from retrieved text or from training data.
+```
+
+*How do you figure out whether a confident, wrong answer is a retrieval failure or a generation failure?*
+
+```
+You must inspect the retrieved chunks. If the retrieved chunks contain the wrong information or belong to the wrong game, it is a retrieval failure. If the retrieved chunks contain the correct rule but the model ignored them to make something up, it is a generation (grounding) failure.
+```
+
+---
+
 ## Implementation Notes
 
 *Fill this in after implementing and testing.*

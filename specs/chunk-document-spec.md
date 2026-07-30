@@ -109,6 +109,30 @@ handle these cases better, at the cost of more implementation complexity.
 
 ---
 
+### Why does splitting rule book text into 50-character chunks produce worse retrieval than 300-character chunks?
+
+```
+Individual chunks lose the surrounding context that makes their meaning clear. A fragment like "Players may only build" is too vague to embed meaningfully or match accurately against specific queries.
+```
+
+---
+
+### What is the best reason to use overlapping chunks when splitting documents?
+
+```
+Overlap ensures that a rule spanning a chunk boundary — one that begins in one chunk and concludes in the next — can still be retrieved as a coherent, complete thought.
+```
+
+---
+
+### How would you actually determine which chunking strategy is better?
+
+```
+You determine this by building a custom evaluation script. You provide a list of test questions with known correct answers and known source games, then automatically measure which chunking strategy consistently returns the correct source game in the top results.
+```
+
+---
+
 ## Implementation Notes
 
 *Chunk Size: 300 characters. (Rulebooks are semantically dense; smaller chunks preserve specific rules).*
@@ -125,3 +149,4 @@ Fọ́là
 ```
 [your answer here]
 ```
+

@@ -90,6 +90,23 @@ We will retrieve the top 3 results (top_k=3). A distance score around 0.1–0.2 
 
 ---
 
+### Questions:
+
+*You query "how do you win?" and get back chunks from Catan, Ticket to Ride, Pandemic, and Monopoly. Is this a retrieval failure?*
+
+```
+No. The query "how do you win?" is semantically similar to the winning conditions of all four games. Semantic search correctly returned the most relevant chunks across the full corpus.
+```
+
+*What should RulesBot do when retrieving winning conditions across four games?*
+
+```
+Since the retrieval correctly matched the semantic intent across the database, the bot should ideally ask for clarification (e.g., "Which game are you asking about?"). Alternatively, it could summarize the winning conditions for all four games, though that risks hitting token limits or overwhelming the user.
+```
+
+
+---
+
 ## Implementation Notes
 
 *Fill this in after implementing, before moving to Milestone 3.*
