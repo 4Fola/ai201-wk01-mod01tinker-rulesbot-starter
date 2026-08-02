@@ -97,12 +97,18 @@ def retrieve(query: str, top_k: int = N_RESULTS) -> list[dict]:
     distances = results["distances"][0]
 
     for doc, meta, dist in zip(documents, metadatas, distances):
-        retrieved_chunks.append({
+        retrieved_chunks.append(
+            {
                 "text": doc,
-                "game": meta.get("game", "Unknown") if isinstance(meta, dict) else "Unknown",
-                "distance": dist
-        })   
+                "game": (
+                    meta.get("game", "Unknown") if isinstance(meta, dict) else "Unknown"
+                ),
+                "distance": dist,
+            }
+        )
 
-        print(f"[{meta.get('game', 'Unknown') if isinstance(meta, dict) else 'Unknown'}] (dist: {dist:.3f}) {doc[:80]}...")
+        print(
+            f"[{meta.get('game', 'Unknown') if isinstance(meta, dict) else 'Unknown'}] (dist: {dist:.3f}) {doc[:80]}..."
+        )
 
     return retrieved_chunks

@@ -1,6 +1,6 @@
 # 🎲 RulesBot 
 
-# 👉 [Read Me](README.md) | [AI Bill of Materials (AI-BOM)](AI_Bill_of_Materials.md) | [Model Card](model_card.md) |
+# 👉 [Read Me](README.md) | [AI Bill of Materials (AI-BOM)](AIBOM.md) | [Model Card](model_card.md) |
 
 > A board game rules assistant — because "just read the rulebook" isn't always helpful at 11pm on game night.
 
@@ -25,6 +25,54 @@ Fork this repo, then clone your fork locally.
 python -m venv .venv
 source .venv/bin/activate      # Mac/Linux
 # or: .venv\Scripts\activate   # Windows
+```
+
+### NB: DevSecOps Local Setup Instructions
+Step 1: Install the Python-based Tools
+Ensure your virtual environment is activated, then install the security and linting tools via pip.
+```bash
+pip install bandit pip-audit black flake8
+```
+
+Step 2: Run Code Formatting (Black)
+Black is an uncompromising code formatter. Running it ensures your code adheres to professional PEP8 standards.
+```bash
+black .
+```
+
+Step 3: Run Code Linting (Flake8)
+Flake8 checks your code for stylistic errors, undefined names, and unused imports.
+```bash
+flake8 .
+```
+
+Step 4: Run Static Application Security Testing (Bandit)
+Bandit scans your Python code for common security issues. The -ll flag tells it to only report medium and high severity issues.
+After running the command, double-click the newly created bandit_report.html file in your project directory (or open it via your browser), and you will be able to review the security findings in a visual format. (GUI).
+
+```bash
+bandit -r . -ll
+bandit -r . -f html -o bandit_report.html
+```
+
+Step 5: Run Dependency Vulnerability Scanning (Pip-Audit)
+This checks your requirements.txt against known Common Vulnerabilities and Exposures (CVEs) databases.
+```bash
+pip-audit -r requirements.txt
+```
+
+Step 6: Install and Run Secret Scanning (Gitleaks)
+Gitleaks prevents you from accidentally committing API keys (like your Groq key) to GitHub. It is a standalone binary rather than a Python package.
+**For MacOS:**
+```bash
+brew install gitleaks
+gitleaks detect --source . -v
+```
+**For Windows / Linux (via Docker):**
+```bash
+docker run -v ${PWD}:/path zricethezav/gitleaks:latest detect --source="/path" -v
+Using WinGet: winget install -e --id Gitleaks.Gitleaks
+Using Scoop: scoop install gitleaks
 ```
 
 ### 3. Install dependencies

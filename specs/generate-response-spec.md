@@ -129,13 +129,14 @@ You must inspect the retrieved chunks. If the retrieved chunks contain the wrong
 
 ```
 Query: How do you get out of Jail in Monopoly?
-Response: [abbreviated response]
-Correctly grounded? [yes / no]
-Cited the right game? [yes / no]
+Response: Based on the loaded rules for Monopoly, the closest match I found is: a row. When sent to Jail, move directly to Jail — do not pass Go, do not collect $200. To get out of Jail: pay a $50 fine before rolling on any of your next three turns, use a Get Out of Jail Free card, or roll doubles on any of your three turns in Jail. If you have not rolled doubles after three t...
+This answer is grounded in the retrieved rule excerpts and may be incomplete. If you add a GROQ API key, the app can generate a more polished response.
+Correctly grounded? ✅ **YES** / no
+Cited the right game? ✅ **YES** / no
 ```
 
 **One thing you changed from your original spec after seeing the actual output:**
 
 ```
-[your answer here]
+NA
 ```

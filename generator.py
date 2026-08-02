@@ -49,7 +49,7 @@ def generate_response(query: str, retrieved_chunks: list[dict]) -> str:
 
     Milestone 3: Generate a Grounded Response
     - Addressed: Grounding failures and hallucinations.
-    - Logic: Applies a strict system prompt to prohibit outside knowledge and 
+    - Logic: Applies a strict system prompt to prohibit outside knowledge and
       formats context explicitly with source metadata.
     """
 
@@ -80,12 +80,12 @@ def generate_response(query: str, retrieved_chunks: list[dict]) -> str:
     # Assuming _client and config are imported at the top of the file per the starter repo
     try:
         completion = _client.chat.completions.create(
-            model=LLM_MODEL, # Uses the model defined in config.py            
+            model=LLM_MODEL,  # Uses the model defined in config.py
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.0, # Using a low temperature enforces deterministic, grounded answers
+            temperature=0.0,  # Using a low temperature enforces deterministic, grounded answers
         )
 
         # Groq responses mirror common chat-completion shapes

@@ -11,7 +11,9 @@ if __name__ == "__main__":
     retrieved = retrieve(query)
     print(f"Retrieved {len(retrieved)} chunks")
     for i, r in enumerate(retrieved, start=1):
-        print(f"{i}. [{r.get('game')}] dist={r.get('distance'):.3f} text={r.get('text')[:80]}...")
+        print(
+            f"{i}. [{r.get('game')}] dist={r.get('distance'):.3f} text={r.get('text')[:80]}..."
+        )
 
     print("Generating response...")
     answer = generate_response(query, retrieved)

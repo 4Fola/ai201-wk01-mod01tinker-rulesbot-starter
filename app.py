@@ -3,10 +3,10 @@ from ingest import load_documents, chunk_document
 from retriever import embed_and_store, retrieve, get_collection
 from generator import generate_response
 
-
 # ---------------------------------------------------------------------------
 # Ingestion — runs once on startup
 # ---------------------------------------------------------------------------
+
 
 def run_ingestion():
     """
@@ -19,7 +19,9 @@ def run_ingestion():
     collection = get_collection()
 
     if collection.count() > 0:
-        print(f"Vector store already populated ({collection.count()} chunks). Skipping ingestion.")
+        print(
+            f"Vector store already populated ({collection.count()} chunks). Skipping ingestion."
+        )
         print("To re-ingest, delete the ./chroma_db folder and restart.")
         return
 
@@ -44,6 +46,7 @@ def run_ingestion():
 # ---------------------------------------------------------------------------
 # Chat handler
 # ---------------------------------------------------------------------------
+
 
 def chat(message, history):
     if not message.strip():
@@ -134,9 +137,9 @@ with gr.Blocks(
 
 
 if __name__ == "__main__":
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
     print("  RulesBot — starting up")
-    print("="*50 + "\n")
+    print("=" * 50 + "\n")
     print("Note: ingestion no longer runs automatically on startup.")
     print("To ingest rulebooks run: python ingest_run.py")
     demo.launch()
